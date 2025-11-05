@@ -2,41 +2,50 @@ from django.shortcuts import render
 
 from catalog.models import Product
 
+from django.urls import reverse_lazy
+from django.views.generic import ListView, DetailView, TemplateView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
-def home(request):
-    return render(request, 'catalog/home.html')
+
+class HomeView(TemplateView):
+    template_name = 'catalog/home.html'
 
 
-def contacts(request):
-    return render(request, 'catalog/contacts.html')
+class ContactsView(TemplateView):
+    template_name = 'catalog/contacts.html'
 
 
 def product_view(request):
     return render(request, 'catalog/product.html')
 
 
-def index(request):
-    product = Product.objects.get(id=1)
-    context = {
-        'product_name': product.product_name,
-        'description': product.description,
-        'category': product.category,
-        'price': product.price,
-    }
-    return render(request, 'catalog/index.html', context=context)
+class ProductListView(ListView):
+    model = Product
+    template_name = 'catalog/product_list.html'
+    context_object_name = 'products'
 
 
-def catalog_detail(request):
-    product = Product.objects.get(id=1)
-    context = {
-        'product': product
-    }
-    return render(request, 'catalog/catalog_detail.html', context=context)
+class ProductCreateView(CreateView):
+    model = Product
+    fields = ['product_name', 'description', 'category', 'price']
+    template_name = 'catalog/product.html'
+    success_url = reverse_lazy('catalog:product_list')
 
 
-def product_list(request):
-    products = Product.objects.all()
-    context = {
-        'products': products,
-    }
-    return render(request, 'catalog/product_list.html', context=context)
+class ProductDetailView(DetailView):
+    model = Product
+    template_name = 'catalog/catalog_detail.html'
+    context_object_name = 'product'
+
+
+class ProductUpdateView(UpdateView):
+    model = Product
+    fields = ['product_name', 'description', 'category', 'price']
+    template_name = 'catalog/product.html'
+    success_url = reverse_lazy('catalog:product_list')
+
+
+class ProductDeleteView(DeleteView):
+    model = Product
+    template_name = 'catalog/product_confirm_delete.html'
+    success_url = reverse_lazy('catalog:product_list')
