@@ -8,7 +8,7 @@ banned_words = ['казино', 'криптовалюта', 'крипта', 'б�
 class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = ['product_name', 'description', 'category', 'price',]
+        fields = ['product_name', 'description', 'category', 'price', 'created_at', 'updated_at']
 
     def clean(self):
         cleaned_data = super().clean()
@@ -21,7 +21,7 @@ class ProductForm(forms.ModelForm):
 
     def clean_price(self):
         price = self.cleaned_data.get('price')
-        if price < 0:
+        if int(price) < 0:
             raise ValidationError('цена не может быть отрицательной')
         return price
 
@@ -47,4 +47,13 @@ class ProductForm(forms.ModelForm):
         self.fields['price'].widget.attrs.update({
             'class': 'form-control',
             'placeholder': 'Введите цену'
+        })
+        self.fields['created_at'].widget.attrs.update({
+            'class': 'form-control',
+            'placeholder': 'Введите дату'
+
+        })
+        self.fields['updated_at'].widget.attrs.update({
+            'class': 'form-control',
+            'placeholder': 'Введите дату'
         })

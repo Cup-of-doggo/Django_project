@@ -19,7 +19,7 @@ class BlogListView(ListView):
     def get_queryset(self):
         """Возвращает список опубликованных статей."""
         queryset = super().get_queryset()
-        return queryset.filter(is_published=True)
+        return queryset.filter(publication_sign=True)
 
 
 class BlogDetailView(DetailView):

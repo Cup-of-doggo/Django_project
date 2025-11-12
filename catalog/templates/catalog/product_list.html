@@ -1,24 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Список товаров</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="/static/css/bootstrap.min.css">
-</head>
-<body>
-    <div class="container mt-5">
-      <h1>Список товаров</h1>
-      <ul class="list-group">
-        {% for product in products %}
+{% extends 'catalog/base.html' %}
 
-          <li class="list-group-item d-flex justify-content-between align-items-center">
-              {{ product }}
-          </li>
+{% block title %}Список товаров{% endblock %}
 
-        {% endfor %}
-      </ul>
-    </div>
-    <script src="/static/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+{% block content %}
+{% include 'catalog/header.html' %}
+<h2>Список товаров</h2>
+<ul class="list-group">
+    {% for product in products %}
+        <li class="list-group-item">
+            <a href="{% url 'catalog:product_detail' product.pk %}">{{ catalog.product_name }}</a>
+        </li>
+    {% endfor %}
+</ul>
+{% endblock %}
