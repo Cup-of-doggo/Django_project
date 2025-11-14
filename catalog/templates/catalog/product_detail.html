@@ -1,16 +1,27 @@
 {% extends 'catalog/base.html' %}
 
-{% block title %}Детали каталога{% endblock %}
+{% block title %}Детали товара{% endblock %}
 
 {% block content %}
 {% include 'catalog/header.html' %}
-<h2>{{ catalog.product_name }}</h2>
-<p>Название продукта: {{ product_name }}</p>
-<p>Описание продукта: {{ description }}</p>
-<p>Категория: {{ category }}</p>
-<p>Цена: {{ price }}</p>
-<p>Дата публикации: {{ catalog.created_at|date:"d M Y" }}</p>
-<a href="{% url 'catalog:product_update' product.pk %}" class="btn btn-secondary">Редактировать</a>
-<a href="{% url 'catalog:product_delete' product.pk %}" class="btn btn-danger">Удалить</a>
-<a href="{% url 'catalog:product_list' %}" class="btn btn-primary">Вернуться к списку</a>
+<div class="card">
+    <div class="card-body">
+        <h2 class="card-title">{{ product.product_name }}</h2>
+        <p class="card-text"><strong>Описание:</strong> {{ product.description }}</p>
+        <p class="card-text"><strong>Категория:</strong> {{ product.category.category_name }}</p>
+        <p class="card-text"><strong>Цена:</strong> {{ product.price }} руб.</p>
+        <p class="card-text"><strong>Дата создания:</strong> {{ product.created_at|date:"d M Y" }}</p>
+        <p class="card-text"><strong>Дата обновления:</strong> {{ product.updated_at|date:"d M Y" }}</p>
+
+        {% if product.image %}
+            <img src="{{ product.image.url }}" alt="{{ product.product_name }}" class="img-fluid" style="max-width: 300px;">
+        {% endif %}
+
+        <div class="mt-3">
+            <a href="{% url 'catalog:product_update' product.pk %}" class="btn btn-secondary">Редактировать</a>
+            <a href="{% url 'catalog:product_delete' product.pk %}" class="btn btn-danger">Удалить</a>
+            <a href="{% url 'catalog:product_list' %}" class="btn btn-primary">Вернуться к списку</a>
+        </div>
+    </div>
+</div>
 {% endblock %}

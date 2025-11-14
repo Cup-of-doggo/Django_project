@@ -4,56 +4,36 @@ from django.core.exceptions import ValidationError
 
 banned_words = ['казино', 'криптовалюта', 'крипта', 'биржа', 'дешево', 'бесплатно', 'обман', 'полиция', 'радар']
 
-
 class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = ['product_name', 'description', 'category', 'price', 'created_at', 'updated_at']
+        fields = ['product_name', 'description', 'image', 'category', 'price']
 
-    def clean(self):
-        cleaned_data = super().clean()
-        product_name = cleaned_data.get('product_name')
-        description = cleaned_data.get('description')
+    def clean_product_name(self):
+        product_name = self.cleaned_data.get('product_name')
+        for word in banned_words:
+            if word in product_name.lower():
+                raise ValidationError(f'Название содержит запрещенное слово: {word}')
+        return product_name
 
-        if product_name.lower() == banned_words or description.lower() == banned_words :
-            self.add_error('product_name', 'Поле содержит недопустимое значение')
-
+    def clean_description(self):
+        description = self.cleaned_data.get('description')
+        for word in banned_words:
+            if word in description.lower():
+                raise ValidationError(f'Описание содержит запрещенное слово: {word}')
+        return description
 
     def clean_price(self):
         price = self.cleaned_data.get('price')
-        if int(price) < 0:
-            raise ValidationError('цена не может быть отрицательной')
+        if price < 0:
+            raise ValidationError('Цена не может быть отрицательной')
         return price
-
 
     def __init__(self, *args, **kwargs):
         super(ProductForm, self).__init__(*args, **kwargs)
 
-        self.fields['product_name'].widget.attrs.update({
-            'class': 'form-control',
-            'placeholder': 'Введите название товара'
-        })
-
-        self.fields['description'].widget.attrs.update({
-            'class': 'form-control',
-            'placeholder': 'Напишите описание товара'
-        })
-
-        self.fields['category'].widget.attrs.update({
-            'class': 'form-control',
-            'placeholder': 'Укажите категорию товара'
-        })
-
-        self.fields['price'].widget.attrs.update({
-            'class': 'form-control',
-            'placeholder': 'Введите цену'
-        })
-        self.fields['created_at'].widget.attrs.update({
-            'class': 'form-control',
-            'placeholder': 'Введите дату'
-
-        })
-        self.fields['updated_at'].widget.attrs.update({
-            'class': 'form-control',
-            'placeholder': 'Введите дату'
-        })
+        for field_name, field in self.fields.items():
+            field.widget.attrs.update({
+                'class': 'form-control',
+                'placeholder': f'Введите {field.label.lower()}'
+            })

@@ -1,11 +1,8 @@
-from django.shortcuts import render
-
-from catalog.models import Product
-
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, TemplateView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
+from catalog.models import Product
 from catalog.forms import ProductForm
 
 
@@ -17,14 +14,13 @@ class ContactsView(TemplateView):
     template_name = 'catalog/contacts.html'
 
 
-def product_view(request):
-    return render(request, 'catalog/product_detail.html')
-
-
 class ProductListView(ListView):
     model = Product
     template_name = 'catalog/product_list.html'
     context_object_name = 'products'
+
+    def get_queryset(self):
+        return Product.objects.all().select_related('category')
 
 
 class ProductCreateView(CreateView):
@@ -38,6 +34,9 @@ class ProductDetailView(DetailView):
     model = Product
     template_name = 'catalog/product_detail.html'
     context_object_name = 'product'
+
+    def get_queryset(self):
+        return Product.objects.all().select_related('category')
 
 
 class ProductUpdateView(UpdateView):

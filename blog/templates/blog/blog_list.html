@@ -8,8 +8,11 @@
 <ul class="list-group">
     {% for blog_ in blog %}
         <li class="list-group-item">
-            <a href="{% url 'blog:blog_detail' blog.pk %}">{{ blog.title }}</a>
+            <a href="{% url 'blog:blog_detail' blog.pk %}">{{ blog.title }}</a> - Просмотров: {{ blog.views_count }}
         </li>
+    {% empty %}
+        <li class="list-group-item">Блоги не найдены</li>
     {% endfor %}
 </ul>
+<a href="{% url 'blog:blog_create' %}" class="btn btn-primary mt-3">Добавить блог</a>
 {% endblock %}
