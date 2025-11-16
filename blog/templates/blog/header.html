@@ -1,8 +1,9 @@
 <div class="header">
     <h1>Блоги</h1>
-    <nav>
-        <a href="{% url 'blog:blog_list' %}">Список блогов</a>
-        <a href="{% url 'blog:blog_create' %}">Добавить блог</a>
-    </nav>
+    {% if user.is_authenticated %}
+    <p>Добро пожаловать, {{ user.username }}!</p>
+    {% else %}
+    <p>Добро пожаловать на сайт!</p>
+    {% endif %}
 </div>
 <hr>

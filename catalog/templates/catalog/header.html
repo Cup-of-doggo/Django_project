@@ -1,8 +1,9 @@
 <div class="header">
     <h1>Товары</h1>
-    <nav>
-        <a href="{% url 'catalog:product_list' %}">Список товаров</a>
-        <a href="{% url 'catalog:product_create' %}">Добавить товар</a>
-    </nav>
+    {% if user.is_authenticated %}
+    <p>Добро пожаловать, {{ user.username }}!</p>
+    {% else %}
+    <p>Добро пожаловать на сайт!</p>
+    {% endif %}
 </div>
 <hr>

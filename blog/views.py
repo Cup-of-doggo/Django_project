@@ -1,10 +1,11 @@
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, DetailView
 from django.urls import reverse_lazy, reverse
 from .models import Blog
 
 
-class BlogCreateView(CreateView):
+class BlogCreateView(LoginRequiredMixin, CreateView):
     model = Blog
     fields = ['title', 'content', 'preview', 'publication_sign']
     template_name = 'blog/blog_form.html'
@@ -32,7 +33,7 @@ class BlogDetailView(DetailView):
         return obj
 
 
-class BlogUpdateView(UpdateView):
+class BlogUpdateView(LoginRequiredMixin, UpdateView):
     model = Blog
     fields = ['title', 'content', 'preview', 'publication_sign']
     template_name = 'blog/blog_form.html'
