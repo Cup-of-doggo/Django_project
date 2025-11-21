@@ -50,7 +50,7 @@ class ProductUpdateView(LoginRequiredMixin, UpdateView):
     success_url = reverse_lazy('catalog:product_list')
 
     def get_queryset(self):
-        if not self.request.user == self.owner:
+        if not self.request.CustomUser == self.owner:
             return Product.objects.none()
         return Product.objects.all()
 
@@ -60,6 +60,6 @@ class ProductDeleteView(LoginRequiredMixin, DeleteView):
     success_url = reverse_lazy('catalog:product_list')
 
     def get_queryset(self):
-        if not self.request.user.has_perm('product.delete_product') or not self.request.user == self.owner:
+        if not self.request.user.has_perm('product.delete_product') or not self.request.CustomUser == self.owner:
             return Product.objects.none()
         return Product.objects.all()

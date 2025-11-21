@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User
+from users.models import CustomUser
 from django.db import models
 
 class Category(models.Model):
@@ -24,7 +24,7 @@ class Product(models.Model):
     created_at = models.DateField(auto_now_add=True, verbose_name='Дата создания')
     updated_at = models.DateField(auto_now=True, verbose_name='Дата последнего изменения')
     is_published = models.BooleanField(default=False, verbose_name='статус публикации')
-    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='products',null=True,blank=True)
+    owner = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='products',null=True,blank=True)
 
 
     def __str__(self):
