@@ -29,6 +29,10 @@ class ProductCreateView(LoginRequiredMixin, CreateView):
     template_name = 'catalog/product_form.html'
     success_url = reverse_lazy('catalog:product_list')
 
+    def form_valid(self, form):
+        form.instance.owner = self.request.user
+        return super().form_valid(form)
+
 
 class ProductDetailView(DetailView):
     model = Product
@@ -45,8 +49,17 @@ class ProductUpdateView(LoginRequiredMixin, UpdateView):
     template_name = 'catalog/product_form.html'
     success_url = reverse_lazy('catalog:product_list')
 
+    def get_queryset(self):
+        if not self.request.user == self.owner:
+            return Product.objects.none()
+        return Product.objects.all()
 
-class ProductDeleteView(DeleteView):
+class ProductDeleteView(LoginRequiredMixin, DeleteView):
     model = Product
     template_name = 'catalog/catalog_confirm_delete.html'
     success_url = reverse_lazy('catalog:product_list')
+
+    def get_queryset(self):
+        if not self.request.user.has_perm('product.delete_product') or not self.request.user == self.owner:
+            return Product.objects.none()
+        return Product.objects.all()
