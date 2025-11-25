@@ -1,14 +1,14 @@
 {% extends 'catalog/base.html' %}
 
-{% block title %}Список товаров{% endblock %}
+{% block title %}Список товаров {% endblock %}
 
 {% block content %}
 {% include 'catalog/header.html' %}
-<h2>Список товаров</h2>
+<h2>Список товаров в {{ product.category }}</h2>
 <ul class="list-group">
-    {% for product_ in product %}
+    {% for product_ in product_list_in_category %}
         <li class="list-group-item">
-            <a href="{% url 'catalog:product_detail' product.pk %}">{{ product.product_name }} - {{ product.price }} руб. {{ product.category }} </a>
+            <a href="{% url 'catalog:product_detail' product.pk %}">{{ product_.product_name }}</a> - {{ product_.price }} руб.
         </li>
     {% empty %}
         <li class="list-group-item">Товары не найдены</li>

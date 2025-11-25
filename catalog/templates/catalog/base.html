@@ -32,9 +32,9 @@
                 </li>
                 {% if user.is_authenticated %}
                 <li class="nav-item">
-                    <form method="post" action="{% url 'users:logout' %}" style="display: inline;">
+                    <form method="post" action="{% url 'users:logout' %}">
                         {% csrf_token %}
-                        <button type="submit" class="btn btn-link nav-link">Выйти</button>
+                        <button type="submit">Выйти</button>
                     </form>
                 </li>
                 {% else %}
