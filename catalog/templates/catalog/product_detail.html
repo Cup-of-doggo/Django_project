@@ -12,6 +12,7 @@
         <p class="card-text"><strong>Цена:</strong> {{ product.price }} руб.</p>
         <p class="card-text"><strong>Дата создания:</strong> {{ product.created_at|date:"d M Y" }}</p>
         <p class="card-text"><strong>Дата обновления:</strong> {{ product.updated_at|date:"d M Y" }}</p>
+        <p class="card-text"><strong>Товары в этой категории:</strong> {{ product_list_in_category }}</p>
 
         {% if product.image %}
             <img src="{{ product.image.url }}" alt="{{ product.product_name }}" class="img-fluid" style="max-width: 300px;">
