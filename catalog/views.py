@@ -5,6 +5,10 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from catalog.models import Product
 from catalog.forms import ProductForm
+from django.views.decorators.cache import cache_page
+from django.utils.decorators import method_decorator
+from django.core.cache import cache
+from catalog.services import ProductServices
 
 
 class HomeView(TemplateView):
@@ -21,7 +25,20 @@ class ProductListView(ListView):
     context_object_name = 'products'
 
     def get_queryset(self):
-        return Product.objects.all().select_related('category')
+
+        queryset = cache.get('my_queryset')
+        if not queryset:
+            queryset = super().get_queryset()
+            cache.set('my_queryset', queryset, 60 * 15)
+        return queryset
+
+    def get_context_data(self, **kwargs):
+
+        context = super().get_context_data(**kwargs)
+
+        category_name = self.object.id
+        context['product_list_in_category'] = ProductServices.get_products_by_category(category_name)
+        return context
 
 
 class ProductCreateView(LoginRequiredMixin,PermissionRequiredMixin, CreateView):
@@ -37,6 +54,7 @@ class ProductCreateView(LoginRequiredMixin,PermissionRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
+@method_decorator(cache_page(60 * 15), name='dispatch')
 class ProductDetailView(DetailView):
     model = Product
     template_name = 'catalog/product_detail.html'
